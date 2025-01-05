@@ -35,19 +35,18 @@ class Hero:
         return self.frames[self.current_frame]
 
     def update(self, platform_rect):
-
         self.x += self.velocity_x
-
         self.velocity_y += self.gravity
         self.y += self.velocity_y
 
         if self.rect.colliderect(platform_rect):
-            self.y = platform_rect.top - self.height  
-            self.velocity_y = 0  
-            self.on_ground = True  
+            self.y = platform_rect.top - self.height
+            self.velocity_y = 0
+            self.on_ground = True
         else:
-            self.on_ground = False  
+            self.on_ground = False
 
     @property
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
+

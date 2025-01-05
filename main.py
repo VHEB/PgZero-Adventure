@@ -12,23 +12,30 @@ coins_collected = 0
 font_size = 30
 current_screen = "menu"
 
+platforms = [
+    Rect(150, HEIGHT - 120, 150, 20),
+    Rect(350, HEIGHT - 180, 200, 20),
+    Rect(600, HEIGHT - 140, 150, 20),
+]
+
+platform_rect = Rect(0, HEIGHT - 50, WIDTH, 50)  # Ajuste no chão
+
 def reset_game():
     global life, coins_collected, hero, enemies, collerctables
 
     life = 3
     coins_collected = 0
 
-    hero = Hero(100, 300)
+    hero = Hero(100, HEIGHT - 82)  # Posição inicial ajustada
 
     enemies = [
-        Enemy(500, 300),
-        Enemy(600, 300),
+        Enemy(500, HEIGHT - 80, 350, 750),
     ]
 
     collerctables = [
-        Collectable(300, 525),
-        Collectable(500, 525),
-        Collectable(700, 525),
+        Collectable(180, HEIGHT - 140),
+        Collectable(400, HEIGHT - 200),
+        Collectable(630, HEIGHT - 160),
     ]
 
 reset_game()
@@ -44,7 +51,6 @@ background_image = transform.scale(background_image, (WIDTH, HEIGHT))
 platform_image = image.load("images/ground-1.png")
 platform_width = platform_image.get_width()
 platform_height = platform_image.get_height()
-platform_rect = Rect(0, HEIGHT - platform_height, WIDTH, platform_height)
 
 sounds.background.play()
 sounds.background.set_volume(0.5)
@@ -54,8 +60,8 @@ def draw():
     if current_screen == "game":
         screen.blit(background_image, (0, 0))
         for x in range(0, WIDTH, platform_width):
-            screen.blit(platform_image, (x, HEIGHT - platform_height))
-        hero.update(platform_rect)
+            screen.blit(platform_image, (x, HEIGHT - 50))
+        hero_update(hero, platforms, platform_rect)
         screen.blit(hero.get_sprite(), (hero.x, hero.y))
 
         for collectable in collerctables:
@@ -64,6 +70,9 @@ def draw():
 
         for enemy in enemies:
             screen.blit(enemy.image, (enemy.x, enemy.y))
+
+        for platform in platforms:
+            screen.blit(platform_image, (platform.x, platform.y))
 
         screen.draw.text(f"Life: {life}", (20, 10), fontsize=font_size, color="black")
         screen.draw.text(f"Coins: {coins_collected}", (20, 50), fontsize=font_size, color="black")
@@ -120,10 +129,30 @@ def on_key_up(key):
         if key in [keys.RIGHT, keys.LEFT]:
             hero.velocity_x = 0
 
+def hero_update(hero, platforms, platform_rect):
+    hero.x += hero.velocity_x
+    hero.velocity_y += hero.gravity
+    hero.y += hero.velocity_y
+    collision = False
+    for platform in platforms:
+        if hero.rect.colliderect(platform):
+            hero.y = platform.top - hero.height
+            hero.velocity_y = 0
+            hero.on_ground = True
+            collision = True
+
+    if not collision and hero.rect.colliderect(platform_rect):
+        hero.y = platform_rect.top - hero.height  
+        hero.velocity_y = 0
+        hero.on_ground = True
+    else:
+        hero.on_ground = False
+
+
 def update():
     global coins_collected, life, current_screen
     if current_screen == "game":
-        hero.update(platform_rect)
+        hero_update(hero, platforms, platform_rect)
 
         for collectable in collerctables:
             if not collectable.collected and hero.rect.colliderect(collectable.rect):
@@ -135,7 +164,7 @@ def update():
         for enemy in enemies:
             enemy.update(platform_rect)
             if hero.rect.colliderect(enemy.rect):
-                hero.x, hero.y = 100, 300
+                hero.x, hero.y = 100, HEIGHT - 82
                 sounds.hit.play()
                 sounds.hit.set_volume(0.5)
                 life -= 1
