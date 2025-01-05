@@ -9,7 +9,6 @@ Este guia descreve como clonar o repositório, criar um ambiente virtual em Pyth
 Primeiro, clone o repositório para sua máquina local:
 
 ```bash
-# Substitua o link abaixo pelo link do repositório que você deseja clonar
 git clone https://github.com/VHEB/PgZero-Adventure.git
 ```
 
