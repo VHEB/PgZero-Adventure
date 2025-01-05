@@ -8,8 +8,9 @@ class Hero:
         self.width = 32  # Largura de cada frame
         self.height = 32  # Altura de cada frame
         self.speed = 5
-        self.gravity = 3  
-        self.velocity_y = 0  
+        self.gravity = 5
+        self.velocity_y = 0 
+        self.velocity_x = 0 
         self.on_ground = False  
         self.sprite_sheet = image.load("images/idle.png")
         self.num_frames = 4
@@ -33,6 +34,9 @@ class Hero:
         return self.frames[self.current_frame]
 
     def update(self, platform_rect):
+
+        self.x += self.velocity_x
+
         self.velocity_y += self.gravity
         self.y += self.velocity_y
 

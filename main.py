@@ -44,8 +44,14 @@ def draw_menu():
         screen.draw.filled_rect(Rect((button["x"], button["y"]), (button["width"], button["height"])), "gray")
         screen.draw.text(button["text"], center=(button["x"] + button["width"] // 2, button["y"] + button["height"] // 2), fontsize=30, color="white")
 
-def on_mouse_down(pos):
+def on_mouse_down(pos, button):
     global current_screen
+    
+    if current_screen == "game":
+        if button == mouse.LEFT and hero.rect.collidepoint(pos):
+            print("Clicou na tela")
+
+
     if current_screen == "menu":
         for button in buttons:
             button_rect = Rect((button["x"], button["y"]), (button["width"], button["height"]))
@@ -54,6 +60,21 @@ def on_mouse_down(pos):
                     current_screen = "game"
                 elif button["action"] == "exit_game":
                     exit()
+
+def on_key_down(key):
+    if current_screen == "game":
+        if key == keys.SPACE:
+            if hero.on_ground:
+                hero.velocity_y = -20
+        if key == keys.RIGHT:
+            hero.velocity_x = hero.speed
+        if key == keys.LEFT:    
+            hero.velocity_x = -hero.speed
+
+def on_key_up(key):
+    if current_screen == "game":
+        if key in [keys.RIGHT, keys.LEFT]:
+            hero.velocity_x = 0
 def update():
     if current_screen == "game":
         hero.update(platform_rect)
