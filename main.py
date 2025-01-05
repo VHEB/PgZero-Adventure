@@ -1,11 +1,20 @@
 import pgzrun
 from pygame import image, transform
 from Class.hero import Hero
+from Class.collectable import Collectable
 
 WIDTH = 800
 HEIGHT = 600
 
 hero = Hero(100, 300)
+collerctables = [
+    Collectable(300, 525),
+    Collectable(500, 525),
+    Collectable(700, 525)
+]
+
+coins_collected = 0
+font_size = 30
 
 buttons = [
     {"text": "Start", "x": 300, "y": 200, "width": 200, "height": 70, "action": "start_game"},
@@ -22,8 +31,10 @@ platform_width = platform_image.get_width()
 platform_height = platform_image.get_height()
 platform_rect = Rect(0, HEIGHT - platform_height, WIDTH, platform_height) 
 
-music.set_volume(0.5)  
-music.play("background.mp3")  
+
+sounds.background.play()
+sounds.background.set_volume(0.5)
+
 
 def draw():
     screen.clear()
@@ -34,6 +45,12 @@ def draw():
         hero.update(platform_rect)  # Atualiza o herói com movimentação
         screen.blit(hero.get_sprite(), (hero.x, hero.y))
         
+        for collectable in collerctables:
+            if not collectable.collected:
+                screen.blit(collectable.get_sprite(), (collectable.x, collectable.y))
+
+        screen.draw.text(f"Coins:  {coins_collected}", (10, 10), fontsize=font_size, color="black")
+    
     if current_screen == "menu":
         draw_menu()
 
@@ -44,14 +61,9 @@ def draw_menu():
         screen.draw.filled_rect(Rect((button["x"], button["y"]), (button["width"], button["height"])), "gray")
         screen.draw.text(button["text"], center=(button["x"] + button["width"] // 2, button["y"] + button["height"] // 2), fontsize=30, color="white")
 
-def on_mouse_down(pos, button):
+def on_mouse_down(pos):
     global current_screen
     
-    if current_screen == "game":
-        if button == mouse.LEFT and hero.rect.collidepoint(pos):
-            print("Clicou na tela")
-
-
     if current_screen == "menu":
         for button in buttons:
             button_rect = Rect((button["x"], button["y"]), (button["width"], button["height"]))
@@ -76,6 +88,15 @@ def on_key_up(key):
         if key in [keys.RIGHT, keys.LEFT]:
             hero.velocity_x = 0
 def update():
+    global coins_collected
     if current_screen == "game":
         hero.update(platform_rect)
+
+        for collectable in collerctables:
+            if not collectable.collected and hero.rect.colliderect(collectable.rect):
+                collectable.collected = True
+                coins_collected += 1
+                sounds.coin.play()
+                sounds.coin.set_volume(0.5)
+
 pgzrun.go()
