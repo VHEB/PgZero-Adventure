@@ -5,13 +5,14 @@ class Hero:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.width = 32  # Largura de cada frame
-        self.height = 32  # Altura de cada frame
         self.speed = 5
         self.gravity = 5
         self.velocity_y = 0 
         self.velocity_x = 0 
-        self.on_ground = False  
+        self.on_ground = False 
+
+        self.width = 32  # Largura de cada frame
+        self.height = 32  # Altura de cada frame
         self.sprite_sheet = image.load("images/idle.png")
         self.num_frames = 4
         
