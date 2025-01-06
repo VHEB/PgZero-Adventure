@@ -13,9 +13,9 @@ font_size = 30
 current_screen = "menu"
 
 platforms = [
-    Rect(150, HEIGHT - 120, 150, 20),
-    Rect(350, HEIGHT - 180, 200, 20),
-    Rect(600, HEIGHT - 140, 150, 20),
+    Rect(150, 500, 150, 20),
+    Rect(350, 500, 200, 20),
+    Rect(600, 500, 150, 20),
 ]
 
 platform_rect = Rect(0, HEIGHT - 50, WIDTH, 50)  # Ajuste no chão
@@ -26,16 +26,16 @@ def reset_game():
     life = 3
     coins_collected = 0
 
-    hero = Hero(100, HEIGHT - 82)  # Posição inicial ajustada
+    hero = Hero(100, 300)  # Posição inicial ajustada
 
     enemies = [
-        Enemy(500, HEIGHT - 80, 350, 750),
+        Enemy(500, 300, 150, 750),
     ]
 
     collerctables = [
-        Collectable(180, HEIGHT - 140),
-        Collectable(400, HEIGHT - 200),
-        Collectable(630, HEIGHT - 160),
+        Collectable(150, 480),
+        Collectable(350, 480),
+        Collectable(600, 480),
     ]
 
 reset_game()
@@ -82,7 +82,9 @@ def draw():
 
     elif current_screen == "lose":
         draw_lose()
-
+    elif current_screen == "win":
+        draw_win()
+        
 def draw_menu():
     screen.blit(background_image, (0, 0))
     screen.draw.text("Adventure Kodland!", center=(WIDTH // 2, 100), fontsize=40, color="Black")
@@ -93,6 +95,12 @@ def draw_menu():
 def draw_lose():
     screen.blit(background_image, (0, 0))
     screen.draw.text("You Lost!", center=(WIDTH // 2, HEIGHT // 2 - 100), fontsize=60, color="red")
+    screen.draw.filled_rect(Rect((300, 400), (200, 70)), "gray")
+    screen.draw.text("Menu", center=(400, 435), fontsize=30, color="white")
+
+def draw_win():
+    screen.blit(background_image, (0, 0))
+    screen.draw.text("You Win!", center=(WIDTH // 2, HEIGHT // 2 - 100), fontsize=60, color="green")
     screen.draw.filled_rect(Rect((300, 400), (200, 70)), "gray")
     screen.draw.text("Menu", center=(400, 435), fontsize=30, color="white")
 
@@ -114,6 +122,12 @@ def on_mouse_down(pos):
         if button_rect.collidepoint(pos):
             reset_game()
             current_screen = "menu"
+    elif current_screen == "win":
+        button_rect = Rect((300, 400), (200, 70))
+        if button_rect.collidepoint(pos):
+            reset_game()
+            current_screen = "menu"
+
 
 def on_key_down(key):
     if current_screen == "game":
@@ -160,6 +174,8 @@ def update():
                 coins_collected += 1
                 sounds.coin.play()
                 sounds.coin.set_volume(0.5)
+                if coins_collected == 3:
+                    current_screen = "win"
 
         for enemy in enemies:
             enemy.update(platform_rect)
