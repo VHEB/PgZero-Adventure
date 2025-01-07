@@ -12,11 +12,7 @@ Primeiro, clone o repositório para sua máquina local:
 git clone https://github.com/VHEB/PgZero-Adventure.git
 ```
 
-Navegue até a pasta do projeto:
-
-```bash
-cd repositorio
-```
+Navegue até a pasta do projeto.
 
 ---
 
@@ -74,7 +70,14 @@ pip list
 
 ## 5. **Inicie o Projeto**
 
-Agora você está pronto para executar o projeto! Consulte a documentação ou os arquivos do repositório para instruções específicas sobre como rodar o código.
+Agora você está pronto para executar o projeto!
 
+Rode o código abaixo no terminal e divirta-se.
+```bash
+pgzrun main.py
+```
 Se precisar de ajuda, sinta-se à vontade para perguntar!
+
+Você também pode me encontrar no [LinkedIn](https://www.linkedin.com/in/vitor-heb/).
+
 
