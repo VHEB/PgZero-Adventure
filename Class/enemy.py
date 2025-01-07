@@ -20,7 +20,7 @@ class Enemy:
     def update(self, platform_rect):
         self.x += self.velocity_x
         if self.x <= self.left_limit or self.x + self.width >= self.right_limit:
-            self.velocity_x *= -1  # Inverte a direção
+            self.velocity_x *= -1  
 
         self.velocity_y += self.gravity
         self.y += self.velocity_y

@@ -11,8 +11,8 @@ class Hero:
         self.velocity_x = 0 
         self.on_ground = False 
 
-        self.width = 32  # Largura de cada frame
-        self.height = 32  # Altura de cada frame
+        self.width = 32  
+        self.height = 32  
         self.sprite_sheet = image.load("images/idle.png")
         self.num_frames = 4
         
@@ -35,45 +35,34 @@ class Hero:
         return self.frames[self.current_frame]
 
     def update(self, platforms):
-        # Atualiza a posição horizontal
         self.x += self.velocity_x
-
-        # Aplica gravidade
         self.velocity_y += self.gravity
         self.y += self.velocity_y
-
-        # Assume que o herói não está no chão
         self.on_ground = False
 
         for platform in platforms:
             if self.rect.colliderect(platform):
-                # Colisão por cima da plataforma
                 if self.velocity_y > 0 and self.y + self.height <= platform.top + self.velocity_y:
                     self.y = platform.top - self.height
                     self.velocity_y = 0
                     self.on_ground = True
-                # Colisão por baixo da plataforma (se necessário)
                 elif self.velocity_y < 0 and self.y >= platform.bottom - self.velocity_y:
                     self.y = platform.bottom
                     self.velocity_y = 0
-                # Colisão lateral (esquerda ou direita)
                 elif self.x + self.width > platform.left and self.x < platform.right:
-                    if self.velocity_x > 0:  # Movendo para a direita
+                    if self.velocity_x > 0:  
                         self.x = platform.left - self.width
-                    elif self.velocity_x < 0:  # Movendo para a esquerda
+                    elif self.velocity_x < 0:  
                         self.x = platform.right
                     self.velocity_x = 0
 
-        # Verifica se o herói está fora do limite inferior da tela (queda livre)
         if self.y > 600 - self.height:
             self.y = 600 - self.height
             self.velocity_y = 0
             self.on_ground = True
-        
-        # Impedir o herói de atravessar as bordas da tela
         if self.x < 0:
             self.x = 0
-        elif self.x + self.width > 800:  # Largura da tela definida em main.py
+        elif self.x + self.width > 800:  
             self.x = 800 - self.width
 
     @property

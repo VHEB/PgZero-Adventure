@@ -23,7 +23,7 @@ platform_height = platform_image.get_height()
 sounds.background.play()
 sounds.background.set_volume(0.5)
 
-platform_rect = Rect(0, HEIGHT - 50, WIDTH, 50)  # Ajuste no chão
+platform_rect = Rect(0, HEIGHT - 50, WIDTH, 50)  
 platforms = [
     Rect(150, 500, 10, 20),
     Rect(350, 500, 10, 20),
@@ -37,7 +37,7 @@ def reset_game():
     life = 3
     coins_collected = 0
 
-    hero = Hero(100, 300)  # Posição inicial ajustada
+    hero = Hero(100, 300)  
 
     enemies = [
         Enemy(500, 300, 150, 750),
@@ -136,7 +136,7 @@ def on_mouse_down(pos):
 def on_key_down(key):
     if current_screen == "game":
         if key == keys.SPACE and hero.on_ground:
-            hero.velocity_y = -20  # Salto básico
+            hero.velocity_y = -20  
         if key == keys.RIGHT:
             hero.velocity_x = hero.speed
         if key == keys.LEFT:
