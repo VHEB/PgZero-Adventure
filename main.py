@@ -11,14 +11,25 @@ life = 3
 coins_collected = 0
 font_size = 30
 current_screen = "menu"
+music_enabled = True  
 
-platforms = [
-    Rect(150, 500, 150, 20),
-    Rect(350, 500, 200, 20),
-    Rect(600, 500, 150, 20),
-]
+background_image = image.load("images/background.png")
+background_image = transform.scale(background_image, (WIDTH, HEIGHT))
+
+platform_image = image.load("images/ground-1.png")
+platform_width = platform_image.get_width()
+platform_height = platform_image.get_height()
+
+sounds.background.play()
+sounds.background.set_volume(0.5)
 
 platform_rect = Rect(0, HEIGHT - 50, WIDTH, 50)  # Ajuste no chão
+platforms = [
+    Rect(150, 500, 10, 20),
+    Rect(350, 500, 10, 20),
+    Rect(600, 500, 10, 20),
+    platform_rect,
+]
 
 def reset_game():
     global life, coins_collected, hero, enemies, collerctables
@@ -42,18 +53,10 @@ reset_game()
 
 buttons = [
     {"text": "Start", "x": 300, "y": 200, "width": 200, "height": 70, "action": "start_game"},
-    {"text": "Exit", "x": 300, "y": 300, "width": 200, "height": 70, "action": "exit_game"},
+    {"text": "Exit", "x": 300, "y": 400, "width": 200, "height": 70, "action": "exit_game"},
+    {"text": "Music On/Off", "x": 300, "y": 300, "width": 200, "height": 70, "action": "toggle_music"},
 ]
 
-background_image = image.load("images/background.png")
-background_image = transform.scale(background_image, (WIDTH, HEIGHT))
-
-platform_image = image.load("images/ground-1.png")
-platform_width = platform_image.get_width()
-platform_height = platform_image.get_height()
-
-sounds.background.play()
-sounds.background.set_volume(0.5)
 
 def draw():
     screen.clear()
@@ -61,7 +64,7 @@ def draw():
         screen.blit(background_image, (0, 0))
         for x in range(0, WIDTH, platform_width):
             screen.blit(platform_image, (x, HEIGHT - 50))
-        hero_update(hero, platforms, platform_rect)
+        hero_update(platforms)
         screen.blit(hero.get_sprite(), (hero.x, hero.y))
 
         for collectable in collerctables:
@@ -72,7 +75,7 @@ def draw():
             screen.blit(enemy.image, (enemy.x, enemy.y))
 
         for platform in platforms:
-            screen.blit(platform_image, (platform.x, platform.y))
+            screen.blit(platform_image, platform.topleft)
 
         screen.draw.text(f"Life: {life}", (20, 10), fontsize=font_size, color="black")
         screen.draw.text(f"Coins: {coins_collected}", (20, 50), fontsize=font_size, color="black")
@@ -84,7 +87,7 @@ def draw():
         draw_lose()
     elif current_screen == "win":
         draw_win()
-        
+
 def draw_menu():
     screen.blit(background_image, (0, 0))
     screen.draw.text("Adventure Kodland!", center=(WIDTH // 2, 100), fontsize=40, color="Black")
@@ -116,6 +119,8 @@ def on_mouse_down(pos):
                     current_screen = "game"
                 elif button["action"] == "exit_game":
                     exit()
+                elif button["action"] == "toggle_music":
+                    toggle_music() 
 
     elif current_screen == "lose":
         button_rect = Rect((300, 400), (200, 70))
@@ -128,11 +133,10 @@ def on_mouse_down(pos):
             reset_game()
             current_screen = "menu"
 
-
 def on_key_down(key):
     if current_screen == "game":
         if key == keys.SPACE and hero.on_ground:
-            hero.velocity_y = -20
+            hero.velocity_y = -20  # Salto básico
         if key == keys.RIGHT:
             hero.velocity_x = hero.speed
         if key == keys.LEFT:
@@ -143,30 +147,21 @@ def on_key_up(key):
         if key in [keys.RIGHT, keys.LEFT]:
             hero.velocity_x = 0
 
-def hero_update(hero, platforms, platform_rect):
-    hero.x += hero.velocity_x
-    hero.velocity_y += hero.gravity
-    hero.y += hero.velocity_y
-    collision = False
-    for platform in platforms:
-        if hero.rect.colliderect(platform):
-            hero.y = platform.top - hero.height
-            hero.velocity_y = 0
-            hero.on_ground = True
-            collision = True
-
-    if not collision and hero.rect.colliderect(platform_rect):
-        hero.y = platform_rect.top - hero.height  
-        hero.velocity_y = 0
-        hero.on_ground = True
+def toggle_music():
+    global music_enabled
+    music_enabled = not music_enabled
+    if music_enabled:
+        sounds.background.play()
     else:
-        hero.on_ground = False
+        sounds.background.stop()
 
+def hero_update(platforms):
+    hero.update(platforms) 
 
 def update():
     global coins_collected, life, current_screen
     if current_screen == "game":
-        hero_update(hero, platforms, platform_rect)
+        hero_update(platforms)
 
         for collectable in collerctables:
             if not collectable.collected and hero.rect.colliderect(collectable.rect):
@@ -174,7 +169,7 @@ def update():
                 coins_collected += 1
                 sounds.coin.play()
                 sounds.coin.set_volume(0.5)
-                if coins_collected == 3:
+                if coins_collected == len(collerctables):
                     current_screen = "win"
 
         for enemy in enemies:
