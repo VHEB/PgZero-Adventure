@@ -90,7 +90,7 @@ def draw():
 
 def draw_menu():
     screen.blit(background_image, (0, 0))
-    screen.draw.text("Adventure Kodland!", center=(WIDTH // 2, 100), fontsize=40, color="Black")
+    screen.draw.text("Adventure World!", center=(WIDTH // 2, 100), fontsize=40, color="Black")
     for button in buttons:
         screen.draw.filled_rect(Rect((button["x"], button["y"]), (button["width"], button["height"])), "gray")
         screen.draw.text(button["text"], center=(button["x"] + button["width"] // 2, button["y"] + button["height"] // 2), fontsize=30, color="white")

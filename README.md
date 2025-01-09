@@ -1,3 +1,7 @@
+# Adventure World
+
+Adventure World nasce em de um desafio de criar um game com `pgzero`. Ele é um game de plataforma em que o personagem pode andar, pular, coletar moedas e perde vida ao encostar no `enemy`, o `herói` vence ao coletar todas as moedas e perder quando sua vida chegar a ZERO. 
+
 # Setup do Projeto
 
 Este guia descreve como clonar o repositório, criar um ambiente virtual em Python e instalar as dependências do projeto usando o arquivo `requirements.txt`.
