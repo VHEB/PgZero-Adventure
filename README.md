@@ -98,7 +98,7 @@ Esse projeto foi desenvolvido com as seguintes bibliotecas:
 
 ## 💻 **Projeto**
 
-Adventure World nasce em de um desafio de criar um game com `pgzero`. Ele é um game de plataforma em que o personagem pode andar, pular, coletar moedas e perde vida ao encostar no `enemy`, o `herói` vence ao coletar todas as moedas e perder quando sua vida chegar a ZERO. 
+Adventure World nasce em um desafio de criar um game com `pgzero`. Ele é um game de plataforma em que o personagem pode andar, pular, coletar moedas e perde vida ao encostar no `enemy`, o `herói` vence ao coletar todas as moedas e perder quando sua vida chegar a ZERO. 
 
 Esse projeto utilizou de conceitos de Loop, Condicionais de Decisão, Tratamento de Erros, Funções, Física, um pouco de criativida artística e muita muita LOGICA.
 
